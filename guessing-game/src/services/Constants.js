@@ -3,8 +3,7 @@
  "Things you find in an office", "Sports and Games", "Gadgets"];
 
  export const OPENAI = {
-    "secret": "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",
-    "orgId": "org-JCALC8crjEMmMcRg1ZFsvDld",
+    "secret": process.env.REACT_APP_OPENAI_SECRET,
     "chat_url": "https://api.openai.com/v1/chat/completions",
     "model": "gpt-3.5-turbo"
  } ;
