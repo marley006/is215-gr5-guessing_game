@@ -1,11 +1,18 @@
-import { generateWordByCategory } from './OpenAiService'
+import { generateWordByCategory, generateClues } from './OpenAiService'
+import { CATEGORIES } from './Constants';
 
-const categories = ["Disney Movies", "Famous Filipino Foods", "Philippine Tourist Destinations",
-"Popular Filipino Brands", "Celebrity", "Philippine President", "90s Filipino Band",
-"Things you find in an office", "Sports and Games", "Gadgets"];
 
-export const newGame = () => {
+export const newGame = async () => {
+    console.log("preparing round");
     let randomIndex =  Math.floor(Math.random() * 10);
-    let word = categories[randomIndex];
-    generateWordByCategory(word);
+    let category = CATEGORIES[randomIndex];
+    const  word =  await generateWordByCategory(category);
+    const  clues =  await generateClues(word, category);
+    const roundDetails = {
+        "categoy": category,
+        "word": word,
+        "clues": clues
+    };
+    console.log(roundDetails);
+    return roundDetails;
 }

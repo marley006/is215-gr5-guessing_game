@@ -4,7 +4,8 @@ import { newGame } from './services/Gameplay'
 
 function App() {
 
-  const start = () =>{
+  const start = async () =>{
+    console.log("creating new game");
     newGame();
   }
 
@@ -15,7 +16,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        <button onClick={newGame}>Start</button>
+        <button onClick={start}>Start</button>
       </header>
     </div>
   );
