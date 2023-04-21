@@ -4,8 +4,8 @@ import { CATEGORIES } from './Constants';
 
 export const newGame = async () => {
     console.log("preparing round");
-    let randomIndex =  Math.floor(Math.random() * 10);
-    let category = CATEGORIES[randomIndex];
+    const randomIndex =  Math.floor(Math.random() * 10);
+    const category = CATEGORIES[randomIndex];
     const  word =  await generateWordByCategory(category);
     const  clues =  await generateClues(word, category);
     const roundDetails = {
