@@ -2,7 +2,6 @@ import { generateWordByCategory, generateClues } from './OpenAiService'
 import { CATEGORIES } from './Constants';
 import React, { useState } from 'react';
 
-
 export const newGame = async () => {
     console.log("preparing round");
     const randomIndex =  Math.floor(Math.random() * 10); //randomize index here
@@ -18,21 +17,33 @@ export const newGame = async () => {
     const [currentClueIndex, setCurrentClueIndex] = useState(0);    // count the number of clues provided
     const [guess, setGuess] = useState('');                        // keep track of the user guess
     const [isCorrect, setIsCorrect] = useState(false);             // tag correct guess
-  
+    const [hasDisplayedFirstClue, setHasDisplayedFirstClue] = useState(false);
+
     function handleGuess(e) {
-      e.preventDefault();
-  
-      // compare guess with the word
-      if (guess.toLowerCase() === word.toLowerCase()) {
-        setIsCorrect(true);
-      } else {                                                     // if incorrect, go to the next clue index
-        setCurrentClueIndex(currentClueIndex + 1);
-        setGuess('');
+        e.preventDefault();
+    
+        // compare guess with the word
+        if (guess.toLowerCase() === word.toLowerCase()) {
+          setIsCorrect(true);
+        } else {                                                     // if incorrect, go to the next clue index
+          setCurrentClueIndex(currentClueIndex + 1);
+          setGuess('');
+        }
       }
-    }
+
+      function handleDisplayFirstClue() {
+        setHasDisplayedFirstClue(true);
+      }
   
-     return (
-      <div>
+    return (
+     <div>
+        !hasDisplayedFirstClue ? (
+          <>
+            <p>Guess the word based on the following clue:</p>
+            <p>Clue #{currentClueIndex + 1}: {clues[currentClueIndex]}</p>
+            <button onClick={handleDisplayFirstClue}>Show First Clue</button>
+          </> ) 
+        :
         {isCorrect ? (
           <p>You guessed the word!</p>
         ) : currentClueIndex === clues.length ? (
@@ -48,8 +59,8 @@ export const newGame = async () => {
               <button type="submit">Guess</button>
             </form>
           </>
-        )}
-      </div>
+        )} 
+    </div>
     );
 
     //console.log(roundDetails);
