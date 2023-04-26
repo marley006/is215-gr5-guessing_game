@@ -11,14 +11,18 @@ function App() {
   const [word, setWord] = useState('');
   const [clues, setClues] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
 
   const start = async () => {
     console.log("creating new game");
+    setIsLoading(true);
     let payload = await newGame();
     setCategory(payload.category);
     setClues(payload.clues);
     setWord(payload.word);
     setHasStarted(true);
+    setIsLoading(false);
     console.log("game loaded");
   }
 
@@ -38,8 +42,11 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <div style={{ display: hasStarted ? "none" : "block" }}> 
+        <div style={{ display: hasStarted || isLoading ? "none" : "block" }}> 
           <button onClick={start}>Start</button>
+        </div>
+        <div style={{ display: isLoading ? "block" : "none" }}> 
+          Loading game...
         </div>
         <div style={{ display: hasStarted ? "block" : "none" }}> 
           <p>Category : {category}</p>
