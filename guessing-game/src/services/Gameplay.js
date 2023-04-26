@@ -8,7 +8,7 @@ import { CATEGORIES } from './Constants';
     const word = await generateWordByCategory(category); // get clue from chatgpt
     const clues = await generateClues(word, category); // get hints from chatgpt
     const roundDetails = {
-      "categoy": category,
+      "category": category,
       "word": word,
       "clues": clues
     };

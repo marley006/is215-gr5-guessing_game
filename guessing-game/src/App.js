@@ -7,26 +7,30 @@ function App() {
   const [currentClueIndex, setCurrentClueIndex] = useState(0);    // count the number of clues provided
   const [guess, setGuess] = useState('');                        // keep track of the user guess
   const [isCorrect, setIsCorrect] = useState(false);             // tag correct guess
-  const [roundDetails, setRoundDetails] = useState([]);
-  const [hasDisplayedFirstClue, setHasDisplayedFirstClue] = useState(false);
+  const [category, setCategory] = useState('');
+  const [word, setWord] = useState('');
+  const [clues, setClues] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
 
   const start = async () => {
     console.log("creating new game");
     let payload = await newGame();
-    setRoundDetails(payload);
-    console.log(roundDetails);
-    console.log("game loaded");
+    setCategory(payload.category);
+    setClues(payload.clues);
+    setWord(payload.word);
     setHasStarted(true);
+    console.log("game loaded");
   }
 
-  function handleGuess(e) {
-    e.preventDefault();
-    if (guess.toLowerCase() === roundDetails.word.toLowerCase()) {
+  function handleGuess() {
+    console.log("handle guess", guess);
+    if (guess.toLowerCase() === word.toLowerCase()) {
       setIsCorrect(true);
+      alert("correct");
     } else {
       setCurrentClueIndex(currentClueIndex + 1);
       setGuess('');
+      alert("error");
     }
   }
 
@@ -38,20 +42,18 @@ function App() {
           <button onClick={start}>Start</button>
         </div>
         <div style={{ display: hasStarted ? "block" : "none" }}> 
-          <p>Category : {roundDetails.category}</p>
+          <p>Category : {category}</p>
         </div>
         <div style={{ display: hasStarted ? "block" : "none" }}> 
-        { (hasStarted && roundDetails.length > 0) ?
+        { (clues.length > 0) ?
           <div>
-            <p>Clue #{currentClueIndex }: {roundDetails.clues[currentClueIndex]}</p>
-            <form onSubmit={handleGuess}>
+            <p>Clue {clues[currentClueIndex]}</p>
               <label>
                 <p/>
                 Guess:
-                <input type="text" value={guess} onChange={e => setGuess(e.target.value)} />
+                <input type="text" value={guess} onChange={(e) => {setGuess(e.target.value)}}/>
               </label>
-              <button type="submit">Guess</button>
-            </form>
+              <button onClick={handleGuess}>Guess</button>
           </div> :  ""
         }
         </div>
