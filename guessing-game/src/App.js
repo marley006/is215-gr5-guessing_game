@@ -85,30 +85,38 @@ function App() {
   const [clues, setClues] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   
 
   const start = async () => {
-    console.log("creating new game");
-    setIsLoading(true);
-    setIsCorrect(null);
-    setGuess('');
-    setCurrentClueIndex(0);
+    try {
+      console.log("creating new game");
+      setIsError(false);
+      setIsLoading(true);
+      setIsCorrect(null);
+      setGuess('');
+      setCurrentClueIndex(0);
 
-    let payload = await newGame();
-    setCategory(payload.category);
-    setClues(payload.clues);
-    setWord(payload.word);
+      let payload = await newGame();
+      setCategory(payload.category);
+      setClues(payload.clues);
+      setWord(payload.word);
 
-    // setCategory('Food chain');
-    // setClues(['Clue 1', 'Clue 2', 'Clue 3', 'Clue 4', 'Clue 5', 'Clue 6', 'Clue 7', 'Clue 8', 'Clue 9', 'Clue 10', ]);
-    // setWord('Jollibee');
+      // setCategory('Food chain');
+      // setClues(['Clue 1', 'Clue 2', 'Clue 3', 'Clue 4', 'Clue 5', 'Clue 6', 'Clue 7', 'Clue 8', 'Clue 9', 'Clue 10', ]);
+      // setWord('Jollibee');
 
-    setHasStarted(true);
-    setIsLoading(false);
-    console.log("game loaded");
+      setHasStarted(true);
+      setIsLoading(false);
+      console.log("game loaded");
+    } catch (error) {
+      setIsError(true);
+    }
+    
   }
 
   const end = async () => {
+    setIsError(null);
     setIsCorrect(null);
     setHasStarted(false);
     setIsLoading(false);
@@ -121,23 +129,29 @@ function App() {
     if (guess.toLowerCase() === word.toLowerCase()) {
       setIsCorrect(true);
     } else {
-      setCurrentClueIndex(currentClueIndex + 1);
-      setGuess('');
-      alert("That is incorrect. Please try again.");
-
-      if(currentClueIndex === 9) setIsCorrect(false);
+      if(currentClueIndex === 9){
+        setIsCorrect(false);
+        setGuess('');
+      } else {
+        setCurrentClueIndex(currentClueIndex + 1);
+        setGuess('');
+        alert("Incorrect guess. Displaying a new clue.");
+      }
     }
   }
 
   return (
     <ThemeProvider theme={theme} className="App">
       <MainWrapper>
+
         <AppLogo src={Logo} />
-        <div style={{ display: hasStarted || isLoading && isCorrect === null ? "none" : "block" }}> 
+
+        <div style={{ display: hasStarted || isLoading && isCorrect === null && isError !== null ? "none" : "block" }}> 
           <Typography variant='h4' sx={{ marginTop: '50px', textAlign: 'center', color: '#FFFFFF' }}>Welcome, dear challenger.</Typography>
           <RoundButton onClick={start}>Start Game</RoundButton>
         </div>
-        <div style={{ display: isLoading && isCorrect === null ? "block" : "none" }}> 
+
+        <div style={{ display: isLoading && isCorrect === null && isError !== true ? "block" : "none" }}> 
           <Typography variant='h6' sx={{ marginTop: '50px', textAlign: 'center', color: '#FFFFFF' }}>Starting the game...</Typography>
           <Grid container sx={{ marginTop: '10px' }}>
             <Grid item sm={4}></Grid>
@@ -146,11 +160,13 @@ function App() {
             </Grid>
           </Grid>
         </div>
-        <div style={{ display: hasStarted && isCorrect === null && !isLoading ? "block" : "none" }}> 
+
+        <div style={{ display: hasStarted && isCorrect === null && isError !== true && !isLoading ? "block" : "none" }}> 
           <Typography variant='h6' sx={{ marginTop: '30px', textAlign: 'center', color: '#FFFFFF' }}>Your category is</Typography>
           <Typography variant='h5' sx={{ fontWeight: '700', textAlign: 'center', color: '#FFDE59' }}>{category}</Typography>
         </div>
-        <div style={{ display: hasStarted && isCorrect === null && !isLoading ? "block" : "none" }}> 
+
+        <div style={{ display: hasStarted && isCorrect === null && isError !== true && !isLoading ? "block" : "none" }}> 
           { (clues.length > 0) ?
             <div>
               <Typography variant='h6' sx={{ marginTop: '20px', textAlign: 'center', color: '#FFFFFF' }}>Here is a clue:</Typography>
@@ -181,7 +197,7 @@ function App() {
           }
         </div>
         
-        { isCorrect === true &&
+        { isCorrect === true && isError !== true &&
           <>
             <Typography variant='h6' sx={{ marginTop: '30px', textAlign: 'center', color: '#FFFFFF' }}>You win!</Typography>
             <Stack direction='row' justifyContent='center' sx={{ marginTop: '10px' }}>
@@ -196,15 +212,27 @@ function App() {
           </>
         }
 
-        { isCorrect === false &&
+        { isCorrect === false && isError !== true &&
           <>
             <Typography variant='h6' sx={{ marginTop: '30px', textAlign: 'center', color: '#FFFFFF' }}>You lose!</Typography>
             <Stack direction='row' justifyContent='center' sx={{ marginTop: '10px' }}>
               <Typography variant='h5' sx={{ marginRight: '5px', color: '#FFFFFF' }}>Bow to the</Typography>
               <Typography variant='h5' sx={{ fontWeight: '700', marginRight: '5px', color: '#FFDE59' }}>Guess Master!</Typography>
             </Stack>
+            <Typography variant='h6' sx={{ marginTop: '30px', textAlign: 'center', color: '#FFFFFF' }}>The correct word is</Typography>
+            <Typography variant='h5' sx={{ fontWeight: '700', textAlign: 'center', color: '#FFDE59' }}>{word}</Typography>
             <Stack direction='row' justifyContent='center' alignItems='center' sx={{ marginTop: '10px' }}>
               <RoundButton onClick={start}>Play Again</RoundButton>
+              <Typography variant='body1' onClick={end} sx={{ fontWeight: '700', marginLeft: '20px', marginTop: '28px', color: '#FFDE59', cursor: 'pointer' }}>End Game</Typography>
+            </Stack>
+          </>
+        }
+
+        { isError === true &&
+          <>
+            <Typography variant='h6' color='error' sx={{ marginTop: '50px', textAlign: 'center' }}>Failed to load the game.</Typography>
+            <Stack direction='row' justifyContent='center' alignItems='center'>
+              <RoundButton onClick={start}>Try Again</RoundButton>
               <Typography variant='body1' onClick={end} sx={{ fontWeight: '700', marginLeft: '20px', marginTop: '28px', color: '#FFDE59', cursor: 'pointer' }}>End Game</Typography>
             </Stack>
           </>
