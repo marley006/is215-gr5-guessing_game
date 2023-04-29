@@ -1,5 +1,5 @@
- export const CATEGORIES = ["Disney Movies", "Famous Filipino Foods", "Philippine Tourist Destinations",
- "Filipino Famous Celebrities", "Celebrity", "Top Grossing Movies", "90s Filipino Band",
+ export const CATEGORIES = ["Disney Movies", "Filipino Cuisine", "Philippine Tourist Destinations",
+ "Filipino Famous Celebrities", "Most Watched Animes", "Top Grossing Movies", "90s Filipino Band",
  "Gadgets", "Gaming Consoles", "Types of Transportation"];
 
  export const OPENAI = {
