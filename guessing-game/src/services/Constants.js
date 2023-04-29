@@ -1,6 +1,6 @@
  export const CATEGORIES = ["Disney Movies", "Famous Filipino Foods", "Philippine Tourist Destinations",
- "Popular Filipino Brands", "Celebrity", "Philippine President", "90s Filipino Band",
- "Things you find in an office", "Sports and Games", "Gadgets"];
+ "Filipino Famous Celebrities", "Celebrity", "Top Grossing Movies", "90s Filipino Band",
+ "Gadgets", "Gaming Consoles", "Types of Transportation"];
 
  export const OPENAI = {
     "secret": process.env.REACT_APP_OPENAI_SECRET,
