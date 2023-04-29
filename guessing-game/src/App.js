@@ -146,12 +146,12 @@ function App() {
 
         <AppLogo src={Logo} />
 
-        <div style={{ display: hasStarted || isLoading && isCorrect === null && isError !== null ? "none" : "block" }}> 
+        <div style={{ display: hasStarted || (isLoading && isCorrect === null && isError !== null) ? "none" : "block" }}> 
           <Typography variant='h4' sx={{ marginTop: '50px', textAlign: 'center', color: '#FFFFFF' }}>Welcome, dear challenger.</Typography>
           <RoundButton onClick={start}>Start Game</RoundButton>
         </div>
 
-        <div style={{ display: isLoading && isCorrect === null && isError !== true ? "block" : "none" }}> 
+        <div style={{ display: isLoading && (isCorrect === null && isError !== true) ? "block" : "none" }}> 
           <Typography variant='h6' sx={{ marginTop: '50px', textAlign: 'center', color: '#FFFFFF' }}>Starting the game...</Typography>
           <Grid container sx={{ marginTop: '10px' }}>
             <Grid item sm={4}></Grid>
