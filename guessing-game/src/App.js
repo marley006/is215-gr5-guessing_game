@@ -1,6 +1,9 @@
 import './App.css';
 import { newGame } from './services/Gameplay'
 import React, { useState } from 'react';
+import Modal from './Modal.js';
+
+
 
 import { styled } from '@mui/system';
 import { 
@@ -86,7 +89,8 @@ function App() {
   const [hasStarted, setHasStarted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  
+  const [showModal, setShowModal] = useState(false); //set modal state
+  const [modalMessage, setModalMessage] = useState(''); //set default modal message
 
   const start = async () => {
     try {
@@ -133,11 +137,17 @@ function App() {
         setIsCorrect(false);
         setGuess('');
       } else {
+        console.log("Show Modal = True")
         setCurrentClueIndex(currentClueIndex + 1);
-        setGuess('');
-        alert("Incorrect guess. Displaying a new clue.");
+        setShowModal(true);
+        setModalMessage("Incorrect guess. Displaying a new clue.");
       }
     }
+  }
+
+  function closeModal() {
+    console.log("Closing Modal")
+    setShowModal(false);
   }
 
   return (
@@ -146,12 +156,12 @@ function App() {
 
         <AppLogo src={Logo} />
 
-        <div style={{ display: hasStarted || (isLoading && isCorrect === null && isError !== null) ? "none" : "block" }}> 
+        <div style={{ display: hasStarted || isLoading && isCorrect === null && isError !== null ? "none" : "block" }}> 
           <Typography variant='h4' sx={{ marginTop: '50px', textAlign: 'center', color: '#FFFFFF' }}>Welcome, dear challenger.</Typography>
           <RoundButton onClick={start}>Start Game</RoundButton>
         </div>
 
-        <div style={{ display: isLoading && (isCorrect === null && isError !== true) ? "block" : "none" }}> 
+        <div style={{ display: isLoading && isCorrect === null && isError !== true ? "block" : "none" }}> 
           <Typography variant='h6' sx={{ marginTop: '50px', textAlign: 'center', color: '#FFFFFF' }}>Starting the game...</Typography>
           <Grid container sx={{ marginTop: '10px' }}>
             <Grid item sm={4}></Grid>
@@ -238,6 +248,10 @@ function App() {
           </>
         }
 
+        { showModal && (
+          <Modal message={modalMessage} onClose={closeModal} />
+        )}
+        
       </MainWrapper>
     </ThemeProvider>
   );
